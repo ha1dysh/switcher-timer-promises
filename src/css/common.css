@@ -32,7 +32,7 @@ img {
   outline: none;
 }
 
-[data-start] {
+[data-start], [data-stop] {
   width: 500px;
   padding: 12px 20px;
   margin: 8px 0;
