@@ -53,9 +53,7 @@ function setDate() {
 
 function clearAndReset() {
   clearInterval(timerId);
-  for (let v of valuesEl) {
-    v.textContent = '00';
-  }
+  valuesEl.forEach(e => (e.textContent = '00'));
 }
 
 function convertMs(ms) {
