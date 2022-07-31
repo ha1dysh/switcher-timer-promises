@@ -4,26 +4,43 @@ form.addEventListener('submit', onSubmit);
 let step = null;
 let delay = null;
 let position = null;
+let ct = 1;
 
 function onSubmit(e) {
   e.preventDefault();
 
-  step = Number(form[0].value);
-  delay = Number(form[1].value);
+  delay = Number(form[0].value);
+  step = Number(form[1].value);
   amount = Number(form[2].value);
 
-  for (let i = 0; i < amount; i++) {
-    const createPromise = new Promise((resolve, reject) => {
-      const shouldResolve = Math.random() > 0.3;
+  setTimeout(() => createPromise(), delay);
+  form.reset();
+}
 
-      setTimeout(() => {
-        if (shouldResolve) {
-          resolve(`✅ Fulfilled promise ${i} in ${delay}ms`);
-        }
-        reject(`❌ Rejected promise ${position} in ${delay}ms`);
-      }, delay);
+function createPromise() {
+  const myPromise = new Promise((resolve, reject) => {
+    const shouldResolve = Math.random() > 0.3;
+
+    if (shouldResolve) {
+      resolve(`✅ Fulfilled promise ${ct} in ${delay}ms`);
+    }
+    reject(`❌ Rejected promise ${ct} in ${delay}ms`);
+  });
+
+  myPromise
+    .then(res => {
+      console.log(res);
+    })
+    .then(callAgain())
+    .catch(error => {
+      console.log(error);
     });
-    createPromise.then((res) => console.log(res)).catch((error) => console.log(error))
-    delay+=step
+}
+
+function callAgain() {
+  delay += step;
+  ct += 1;
+  if (ct <= amount) {
+    setTimeout(() => createPromise(), delay);
   }
 }
