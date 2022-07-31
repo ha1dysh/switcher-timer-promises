@@ -3,7 +3,7 @@ form.addEventListener('submit', onSubmit);
 
 let step = null;
 let delay = null;
-let position = null;
+let amount = null;
 let ct = 1;
 
 function onSubmit(e) {
