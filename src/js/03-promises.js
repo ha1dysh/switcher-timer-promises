@@ -38,13 +38,13 @@ function createPromise() {
   myPromise
     .then(res => {
       console.log(res);
-      Notify.success('Sol lucet omnibus');
+      Notify.success(`✅ Fulfilled promise ${ct} in ${delay2}ms`);
       delay2 += step;
       ct += 1;
     })
     .catch(error => {
       console.log(error);
-      Notify.failure('Please, choose date in the future');
+      Notify.failure(`❌ Rejected promise ${ct} in ${delay2}ms`);
       delay2 += step;
       ct += 1;
     });
