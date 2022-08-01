@@ -1,51 +1,43 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const form = document.querySelector('.form');
-form.addEventListener('submit', onSubmit);
+let form = document.querySelector('.form');
+form.addEventListener('submit', onSubmitForm);
 
-let step = null;
-let delay = null;
-let amount = null;
-let ct = null;
-let delay2 = null;
+function onSubmitForm(event) {
+  event.preventDefault();
 
-function onSubmit(e) {
-  e.preventDefault();
+  const {
+    elements: { delay, step, amount },
+  } = event.currentTarget;
 
-  delay = Number(form[0].value);
-  step = Number(form[1].value);
-  amount = Number(form[2].value);
-  ct = 1;
-  delay2 = delay
+  for (let i = 0; i < amount.value; i += 1) {
+    let position = i + 1;
+    let totalDelay = Number(delay.value) + Number(step.value) * i;
 
-  for (let i = 1; i <= amount; i++) {
-    setTimeout(() => createPromise(), delay);
-    delay += step;
+    PromiseResult(position, totalDelay);
   }
-  form.reset();
 }
 
-function createPromise() {
-  const myPromise = new Promise((resolve, reject) => {
-    const shouldResolve = Math.random() > 0.3;
+function createPromise(position, delay) {
+  const shouldResolve = Math.random() > 0.3;
 
-    if (shouldResolve) {
-      resolve(`✅ Fulfilled promise ${ct} in ${delay2}ms`);
-    }
-    reject(`❌ Rejected promise ${ct} in ${delay2}ms`);
-  });
+  return new Promise((resolve, reject) =>
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay)
+  );
+}
 
-  myPromise
-    .then(res => {
-      console.log(res);
-      Notify.success(`✅ Fulfilled promise ${ct} in ${delay2}ms`);
-      delay2 += step;
-      ct += 1;
+function PromiseResult(position, totalDelay) {
+  createPromise(position, totalDelay)
+    .then(({ position, delay }) => {
+      Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
     })
-    .catch(error => {
-      console.log(error);
-      Notify.failure(`❌ Rejected promise ${ct} in ${delay2}ms`);
-      delay2 += step;
-      ct += 1;
+    .catch(({ position, delay }) => {
+      Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
     });
 }
